@@ -1,0 +1,54 @@
+name: Weekly School Finder Report
+
+on:
+  # Chạy mỗi thứ Hai lúc 8:00 SA giờ Hà Nội (UTC+7 = 01:00 UTC)
+  schedule:
+    - cron: "0 1 * * 1"
+  
+  # Cho phép chạy thủ công để test
+  workflow_dispatch:
+
+jobs:
+  find-schools:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write   # Cần để commit seen_urls.json
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run School Finder
+        env:
+          GMAIL_USER:      ${{ secrets.GMAIL_USER }}
+          GMAIL_PASSWORD:  ${{ secrets.GMAIL_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: python run.py
+
+      - name: Upload HTML report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: school-report-${{ github.run_number }}
+          path: report.html
+          retention-days: 30
+
+      - name: Commit updated seen_urls.json
+        run: |
+          git config user.name  "School Finder Bot"
+          git config user.email "school-finder-bot@users.noreply.github.com"
+          git add seen_urls.json
+          git diff --staged --quiet || git commit -m "chore: update seen_urls cache [skip ci]"
+          git push
