@@ -192,7 +192,7 @@ def build_html_report(schools: list[dict]) -> str:
               
               <!-- Footer note -->
               <div style="margin-top:24px;font-size:12px;color:#999;text-align:center;">
-                Báo cáo được tạo tự động bởi School Finder Bot • Chạy mỗi thứ Hai lúc 8:00 SA<br>
+                Báo cáo được tạo tự động bởi School Finder Bot • Chạy mỗi thứ Tư lúc 10:00 SA<br>
                 Nguồn: Google News RSS ({len(schools)} kết quả mới trong 14 ngày qua)
               </div>
             </td>

@@ -1,9 +1,9 @@
 name: Weekly School Finder Report
 
 on:
-  # Chạy mỗi thứ Hai lúc 8:00 SA giờ Hà Nội (UTC+7 = 01:00 UTC)
+  # Chạy mỗi thứ Tư lúc 10:00 SA giờ Hà Nội (UTC+7 = 03:00 UTC)
   schedule:
-    - cron: "0 1 * * 1"
+    - cron: "0 3 * * 3"
   
   # Cho phép chạy thủ công để test
   workflow_dispatch:
